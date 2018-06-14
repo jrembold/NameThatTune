@@ -37,6 +37,7 @@ def getSongData(fname):
 
 def playSong(fname):
     subprocess.Popen(['cmus-remote', '-c', '-q'])
+    subprocess.Popen(['cmus-remote', fname])
     subprocess.Popen(['cmus-remote', '-q', fname])
     time.sleep(1)
     subprocess.Popen(['cmus-remote', '-n'])
@@ -54,6 +55,7 @@ class PlayGame():
         self.round = 1
         self.optcount = 5
 
+        subprocess.Popen(['cmus-remote', '-c'])
         self.readConf()
         self.getMode()
         self.getNumRounds()
