@@ -65,8 +65,8 @@ class PlayGame():
     def readConf(self):
         with open('NtT.conf') as f:
             d = dict(line.rstrip().split('=') for line in f)
-        self.directory = d['Directory'].strip()
-        self.optcount = int(d['NumChoices'].strip())
+        self.directory = d['Directory']
+        self.optcount = int(d['NumChoices'])
 
     def getMode(self):
         title='Please select which mode you would like to play:'
@@ -102,7 +102,7 @@ class PlayGame():
             choice, idx = pick(self.song_list, title, indicator='->')
             self.song_list.remove(choice)
         elapsedtime = time.time()-starttime
-        score = max(100*(1-*elapsedtime/realdata['length']) - (4-len(self.song_list))*20, 0)
+        score = max(100*(1-elapsedtime/realdata['length']) - (4-len(self.song_list))*20, 0)
         print('You guessed it!')
         print(f'Your score was {score:0.2f}')
         input('Press enter to continue to next round...')
