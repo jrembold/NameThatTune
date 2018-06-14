@@ -21,12 +21,18 @@ def getSongChoices(flist, num):
 
 def getSongData(fname):
     data = MP3(fname)
-    title = data['TIT2'].text[0]
-    artist = data['TPE1'].text[0]
+    try:
+        title = data['TIT2'].text[0]
+    except:
+        title = 'Unknown Title'
+    try:
+        artist = data['TPE1'].text[0]
+    except:
+        artist = 'Unknown Artist'
     try:
         album = data['TALB'].text[0]
     except:
-        print(fname)
+        album = 'Unknown Album'
     return {'title':title, 'artist':artist, 'album':album, 'length':data.info.length}
 
 def playSong(fname):
