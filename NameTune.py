@@ -60,7 +60,7 @@ class PlayGame():
         self.getAllSongs()
         while self.round <= self.rounds:
             self.playRound()
-        print(f'Your total score was {self.totalscore:02f}!')
+        print(f'Your total score was {self.totalscore:0.2f}!')
 
     def readConf(self):
         with open('NtT.conf') as f:
@@ -102,7 +102,7 @@ class PlayGame():
             choice, idx = pick(self.song_list, title, indicator='->')
             self.song_list.remove(choice)
         elapsedtime = time.time()-starttime
-        score = max(100*(1-elapsedtime/realdata['length']) - (4-len(self.song_list))*20, 0)
+        score = max(100*(1-elapsedtime/realdata['length']) - (self.optcount-1-len(self.song_list))*20, 0)
         print('You guessed it!')
         print(f'Your score was {score:0.2f}')
         input('Press enter to continue to next round...')
