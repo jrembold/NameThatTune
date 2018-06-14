@@ -23,7 +23,10 @@ def getSongData(fname):
     data = MP3(fname)
     title = data['TIT2'].text[0]
     artist = data['TPE1'].text[0]
-    album = data['TALB'].text[0]
+    try:
+        album = data['TALB'].text[0]
+    except:
+        print(fname)
     return {'title':title, 'artist':artist, 'album':album, 'length':data.info.length}
 
 def playSong(fname):
