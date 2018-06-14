@@ -63,7 +63,9 @@ class PlayGame():
         print(f'Your total score was {int(self.totalscore)}!')
 
     def readConf(self):
-        with open('NtT.conf') as f:
+        dname = os.path.dirname(__file__)
+        fname = os.path.join(dname, 'NtT.conf')
+        with open(fname) as f:
             d = dict(line.rstrip().split('=') for line in f)
         self.directory = d['Directory']
         self.optcount = int(d['NumChoices'])
