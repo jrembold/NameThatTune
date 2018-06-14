@@ -44,6 +44,7 @@ class PlayGame():
         self.round = 1
         self.optcount = 5
 
+        self.readConf()
         self.getMode()
         self.getNumRounds()
         self.getAllSongs()
@@ -54,8 +55,8 @@ class PlayGame():
     def readConf(self):
         with open('NtT.conf') as f:
             d = dict(line.rstrip().split('=') for line in f)
-        self.directory = d['Directory']
-        self.optcount = int(d['NumChoices'])
+        self.directory = d['Directory'].strip()
+        self.optcount = int(d['NumChoices'].strip())
 
     def getMode(self):
         title='Please select which mode you would like to play:'
@@ -69,7 +70,7 @@ class PlayGame():
         self.rounds = int(input('How many rounds would you like? '))
 
     def getAllSongs(self):
-        self.allsongs = getSongList('/home/jedediah/Music')
+        self.allsongs = getSongList(self.directory)
     
     def genOptions(self, n, mode):
         self.song_fnames = getSongChoices(self.allsongs,n)
