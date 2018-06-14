@@ -34,6 +34,7 @@ def playSong(fname):
 
 class PlayGame():
     def __init__(self):
+        self.directory = None
         self.song_list = None
         self.song_fnames = None
         self.allsongs = None
@@ -49,6 +50,12 @@ class PlayGame():
         while self.round <= self.rounds:
             self.playRound()
         print(f'Your total score was {self.totalscore}!')
+
+    def readConf(self):
+        with open('NtT.conf') as f:
+            d = dict(line.rstrip().split('=') for line in f)
+        self.directory = d['Directory']
+        self.optcount = int(d['NumChoices'])
 
     def getMode(self):
         title='Please select which mode you would like to play:'
