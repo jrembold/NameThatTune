@@ -38,6 +38,7 @@ def getSongData(fname):
 def playSong(fname):
     subprocess.Popen(['cmus-remote', '-c', '-q'])
     subprocess.Popen(['cmus-remote', '-q', fname])
+    time.sleep(1)
     subprocess.Popen(['cmus-remote', '-n'])
     subprocess.Popen(['cmus-remote', '-p'])
 
