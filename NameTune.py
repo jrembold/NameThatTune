@@ -3,6 +3,8 @@
 import os
 import subprocess
 import random
+import time
+from picker import pick
 from mutagen.mp3 import MP3
 
 def getSongList(Dir):
@@ -20,12 +22,76 @@ def getSongChoices(flist, num):
 def getSongData(fname):
     data = MP3(fname)
     title = data['TIT2'].text[0]
-    artist = data['TPE2'].text[0]
+    artist = data['TPE1'].text[0]
     album = data['TALB'].text[0]
-    return {'title':title, 'artist':artist, 'album':album}
+    return {'title':title, 'artist':artist, 'album':album, 'length':data.info.length}
 
 def playSong(fname):
     subprocess.Popen(['cmus-remote', '-c', '-q'])
     subprocess.Popen(['cmus-remote', '-q', fname])
     subprocess.Popen(['cmus-remote', '-n'])
     subprocess.Popen(['cmus-remote', '-p'])
+
+class PlayGame():
+    def __init__(self):
+        self.song_list = None
+        self.song_fnames = None
+        self.allsongs = None
+        self.mode = None
+        self.rounds = None
+        self.totalscore = 0
+        self.round = 1
+        self.optcount = 5
+
+        self.getMode()
+        self.getNumRounds()
+        self.getAllSongs()
+        while self.round <= self.rounds:
+            self.playRound()
+        print(f'Your total score was {self.totalscore}!')
+
+    def getMode(self):
+        title='Please select which mode you would like to play:'
+        opts = {'Name the Tune':'title',
+                'Name the Artist':'artist',
+                'Name the Album':'album'}
+        choice,idx = pick(list(opts.keys()), title, indicator='->')
+        self.mode = opts[choice]
+
+    def getNumRounds(self):
+        self.rounds = int(input('How many rounds would you like? '))
+
+    def getAllSongs(self):
+        self.allsongs = getSongList('/home/jedediah/Music')
+    
+    def genOptions(self, n, mode):
+        self.song_fnames = getSongChoices(self.allsongs,n)
+        self.song_list = [getSongData(i)[mode] \
+                for i in self.song_fnames ]
+
+    def playRound(self):
+        self.genOptions(self.optcount, self.mode)
+        realpick = self.song_list[0]
+        realfname = self.song_fnames[0]
+        realdata = getSongData(realfname)
+        random.shuffle(self.song_list)
+        playSong(realfname)
+        starttime = time.time()
+
+        title = f'Round {self.round}: Guess the {self.mode}!'
+        choice = None
+        while choice != realpick:
+            choice, idx = pick(self.song_list, title, indicator='->')
+            self.song_list.remove(choice)
+        elapsedtime = time.time()-starttime
+        score = max(100-5*elapsedtime/realdata['length'] - (4-len(self.song_list))*20, 0)
+        print('You guessed it!')
+        print(f'Your score was {score:0.2f}')
+        input('Press enter to continue to next round...')
+        self.totalscore += score
+        self.round += 1
+
+
+
+if __name__ == '__main__':
+    game = PlayGame()
