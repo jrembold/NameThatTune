@@ -63,6 +63,7 @@ class PlayGame():
         while self.round <= self.rounds:
             self.playRound()
         print(f'Your total score was {int(self.totalscore)}!')
+        input('Press Enter to exit...')
 
     def readConf(self):
         dname = os.path.dirname(__file__)
